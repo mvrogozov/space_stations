@@ -10,7 +10,8 @@ class StationSerializer(ModelSerializer):
         read_only_fields = (
             'id',
             'create_date',
-            'brake_date'
+            'brake_date',
+            'status'
         )
 
     def create(self, validated_data):

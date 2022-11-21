@@ -19,6 +19,7 @@ class Station(models.Model):
     status = models.CharField(
         max_length=32,
         choices=CHOICES,
+        default='OK',
         verbose_name='Статус'
     )
     create_date = models.DateTimeField(
