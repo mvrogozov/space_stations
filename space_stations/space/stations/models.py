@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 class Station(models.Model):
     CHOICES = (
         ('OK', 'running'),
@@ -46,14 +47,14 @@ class Coordinates(models.Model):
     )
 
     def __str__(self):
-        return self.station.name
+        return f'{self.x},{self.y},{self.z}'
 
 
 class Command(models.Model):
     CHOICES = (
-        ('X', 'X'),
-        ('Y', 'Y'),
-        ('Z', 'Z')
+        ('x', 'x'),
+        ('y', 'y'),
+        ('z', 'z')
     )
     user = models.ForeignKey(
         User,
