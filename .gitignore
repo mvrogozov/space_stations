@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+<<<<<<< HEAD
+=======
+
+# .idea
+.idea
+
+# request.http
+requests.http
+>>>>>>> master

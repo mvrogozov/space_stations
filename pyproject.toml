@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "space-stations"
+version = "0.1.0"
+description = ""
+authors = ["Рогозов Михаил <mv.rogozov@yandex.ru>"]
+readme = "README.md"
+packages = [{include = "space_stations"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
