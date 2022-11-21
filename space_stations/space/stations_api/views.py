@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.utils import timezone
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -39,6 +40,7 @@ class StationViewSet(ModelViewSet):
             obj.coordinates.z = z
         if (x < 0) or (y < 0) or (z < 0):
             obj.status = 'BR'
+            obj.brake_date = timezone.now()
         obj.coordinates.save()
         obj.save()
         serializer = CoordinatesSerializer(instance=obj.coordinates)
