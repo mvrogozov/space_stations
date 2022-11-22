@@ -19,15 +19,15 @@ class StationViewSet(ModelViewSet):
     )
     def state(self, request, pk):
         obj = get_object_or_404(self.model.objects.select_related(), id=pk)
-        print(obj, ' ---')
         if request.method == 'GET':
             serializer = CoordinatesSerializer(instance=obj.coordinates)
             return Response(serializer.data, status=status.HTTP_200_OK)
         serializer = CommandSerializer(data=request.data)
         serializer.initial_data['station'] = pk
         serializer.is_valid(raise_exception=True)
-        axis = serializer.data.get('axis')
-        distance = serializer.data.get('distance')
+        axis = serializer.validated_data.get('axis')
+        distance = serializer.validated_data.get('distance')
+        serializer.save()
         x = y = z = 0
         if axis == 'x':
             x = obj.coordinates.x + distance
@@ -44,4 +44,4 @@ class StationViewSet(ModelViewSet):
         obj.coordinates.save()
         obj.save()
         serializer = CoordinatesSerializer(instance=obj.coordinates)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
