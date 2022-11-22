@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Station, Coordinates, Command
+
+from .models import Command, Coordinates, Station
 
 
 class CoordinatesInlines(admin.StackedInline):

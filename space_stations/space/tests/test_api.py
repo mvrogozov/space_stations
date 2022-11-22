@@ -1,7 +1,8 @@
 import pytest
 from django.contrib.auth import get_user_model
-from stations.models import Station, Command
+from django.utils import timezone
 
+from stations.models import Command, Station
 
 User = get_user_model()
 endpoints_status = [
@@ -28,7 +29,7 @@ def test_endpoints_response_status(
 
 
 @pytest.mark.django_db(transaction=True)
-def test_endpoint_post_requests_stations(project_client, post_url, post_data):
+def test_post_requests_stations(project_client, post_url, post_data):
     """Проверка POST запросов на создание станции"""
     count_before = Station.objects.count()
     response = project_client.post(post_url, data=post_data)
@@ -58,7 +59,7 @@ def test_endpoint_post_requests_stations(project_client, post_url, post_data):
 
 
 @pytest.mark.django_db(transaction=True)
-def test_endpoint_post_requests_commands(
+def test_post_requests_commands(
     project_client,
     command_url,
     resource_setup,
@@ -98,12 +99,78 @@ def test_endpoint_post_requests_commands(
     assert coord_after.y == (
         coord_before.y + int(command_data[1]['distance'])
         ), (
-        'Проверьте, что при команде изменения координаты х,'
-        ' происходит корректное изменение координаты х.'
+        'Проверьте, что при команде изменения координаты y,'
+        ' происходит корректное изменение координаты y.'
     )
     assert coord_after.z == (
         coord_before.z + int(command_data[2]['distance'])
         ), (
-        'Проверьте, что при команде изменения координаты х,'
-        ' происходит корректное изменение координаты х.'
+        'Проверьте, что при команде изменения координаты z,'
+        ' происходит корректное изменение координаты z.'
+    )
+
+
+@pytest.mark.django_db(transaction=True)
+def test_station_break(
+    project_client,
+    command_url,
+    resource_setup,
+    command_data
+):
+    """Проверка условий изменения статуса станции."""
+    station = Station.objects.all()[0]
+    status_before = station.status
+    user = User.objects.create(
+        username='User1'
+    )
+    data = {
+        'user': user.id,
+        'axis': 'x',
+        'distance': '-100'
+    }
+    project_client.post(command_url.format(station.id), data=data)
+    station.refresh_from_db()
+    status_after = station.status
+    assert status_after != status_before, (
+        'Проверьте, что при переходе в отрицательные координаты, '
+        'меняется статус станции'
+    )
+
+    data['distance'] = 1000
+    project_client.post(command_url.format(station.id), data=data)
+    station.refresh_from_db()
+    status_back = station.status
+    assert status_after == status_back, (
+        'Проверьте, что при возврате в положительные координаты, '
+        'не меняется статус станции'
+    )
+
+
+@pytest.mark.django_db(transaction=True)
+def test_patch_requests_stations(project_client, resource_setup):
+    """Проверка PATCH запросов на изменение станции"""
+    station = Station.objects.latest('create_date')
+    data = {
+        'name': 'patched name',
+        'status': 'BR',
+        'create_date': timezone.now(),
+        'brake_date': timezone.now()
+    }
+    project_client.patch(endpoints_status[1][0].format(station.id), data=data)
+    patched_station = Station.objects.get(id=station.id)
+    assert station.name != patched_station.name, (
+        'Проверьте, что при PATCH запросе '
+        'меняется имя станции'
+    )
+    assert station.status == patched_station.status, (
+        'Проверьте, что при PATCH запросе '
+        'не меняется состояние станции'
+    )
+    assert station.brake_date == patched_station.brake_date, (
+        'Проверьте, что при PATCH запросе '
+        'не меняется время поломки станции'
+    )
+    assert station.create_date == patched_station.create_date, (
+        'Проверьте, что при PATCH запросе '
+        'не меняется время создания станции'
     )

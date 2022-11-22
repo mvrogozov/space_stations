@@ -1,11 +1,14 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from rest_framework.viewsets import ModelViewSet
+from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework import status
-from stations.models import Station, Command, Coordinates
-from .serializers import StationSerializer, CoordinatesSerializer, CommandSerializer
+from rest_framework.viewsets import ModelViewSet
+
+from stations.models import Station
+
+from .serializers import (CommandSerializer, CoordinatesSerializer,
+                          StationSerializer)
 
 
 class StationViewSet(ModelViewSet):

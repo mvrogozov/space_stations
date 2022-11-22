@@ -1,6 +1,7 @@
 import pytest
 from rest_framework.test import APIClient
-from stations.models import Station, Coordinates
+
+from stations.models import Coordinates, Station
 
 
 @pytest.fixture
@@ -51,6 +52,3 @@ def resource_setup(request):
         x=1, y=2, z=3, station=obj
     )
     return obj
-
-
-    

@@ -1,5 +1,6 @@
 from rest_framework.serializers import ModelSerializer
-from stations.models import Station, Command, Coordinates
+
+from stations.models import Command, Coordinates, Station
 
 
 class StationSerializer(ModelSerializer):
