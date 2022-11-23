@@ -1,0 +1,313 @@
+openapi: 3.0.3
+info:
+  title: Space stations command API
+  version: 1.0.0
+  description: API for creating space stations and moving them.
+paths:
+  /api/stations/:
+    get:
+      operationId: stations_list
+      tags:
+      - stations
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Station'
+          description: ''
+    post:
+      operationId: stations_create
+      tags:
+      - stations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Station'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Station'
+          description: ''
+  /api/stations/{id}/:
+    get:
+      operationId: stations_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this station.
+        required: true
+      tags:
+      - stations
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Station'
+          description: ''
+    put:
+      operationId: stations_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this station.
+        required: true
+      tags:
+      - stations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Station'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Station'
+          description: ''
+    patch:
+      operationId: stations_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this station.
+        required: true
+      tags:
+      - stations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedStation'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Station'
+          description: ''
+    delete:
+      operationId: stations_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this station.
+        required: true
+      tags:
+      - stations
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/stations/{id}/state/:
+    get:
+      operationId: stations_state_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this station.
+        required: true
+      tags:
+      - stations
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Coordinates'
+          description: ''
+    post:
+      operationId: stations_state_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this station.
+        required: true
+      tags:
+      - stations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Command'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Coordinates'
+          description: ''
+components:
+  schemas:
+    AxisEnum:
+      enum:
+      - x
+      - y
+      - z
+      type: string
+    Command:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        axis:
+          allOf:
+          - $ref: '#/components/schemas/AxisEnum'
+          title: Ось
+        distance:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          title: Расстояние
+        user:
+          type: integer
+          title: Пользователь
+        station:
+          type: integer
+          title: Станция
+      required:
+      - axis
+      - distance
+      - id
+      - station
+      - user
+    Coordinates:
+      type: object
+      properties:
+        x:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        y:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        z:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+    PatchedStation:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Имя
+          maxLength: 254
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusEnum'
+          readOnly: true
+          title: Статус
+        create_date:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Дата создания
+        brake_date:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          title: Дата поломки
+    Station:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Имя
+          maxLength: 254
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusEnum'
+          readOnly: true
+          title: Статус
+        create_date:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Дата создания
+        brake_date:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          title: Дата поломки
+      required:
+      - brake_date
+      - create_date
+      - id
+      - name
+      - status
+    StatusEnum:
+      enum:
+      - OK
+      - BR
+      type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid

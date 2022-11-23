@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from drf_spectacular.utils import extend_schema
 
 from stations.models import Station
 
@@ -16,6 +17,10 @@ class StationViewSet(ModelViewSet):
     serializer_class = StationSerializer
     queryset = Station.objects.all()
 
+    @extend_schema(
+        request=CommandSerializer,
+        responses={201: CoordinatesSerializer}
+    )
     @action(
         detail=True,
         methods=['get', 'post']

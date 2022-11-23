@@ -1,7 +1,10 @@
 import pytest
 from rest_framework.test import APIClient
+from django.contrib.auth import get_user_model
 
-from stations.models import Coordinates, Station
+from stations.models import Command, Coordinates, Station
+
+User = get_user_model()
 
 
 @pytest.fixture
@@ -45,10 +48,19 @@ def project_client():
 
 @pytest.fixture(scope="function")
 def resource_setup(request):
-    obj = Station.objects.create(
+    user = User.objects.create(
+        username='testuser1'
+    )
+    station = Station.objects.create(
         name='testname',
     )
     Coordinates.objects.create(
-        x=1, y=2, z=3, station=obj
+        x=1, y=2, z=3, station=station
     )
-    return obj
+    Command.objects.create(
+        axis='x',
+        distance=0,
+        user=user,
+        station=station
+    )
+    return station

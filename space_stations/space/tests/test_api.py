@@ -2,7 +2,7 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 
-from stations.models import Command, Station
+from stations.models import Command, Coordinates, Station
 
 User = get_user_model()
 endpoints_status = [
@@ -120,9 +120,7 @@ def test_station_break(
     """Проверка условий изменения статуса станции."""
     station = Station.objects.all()[0]
     status_before = station.status
-    user = User.objects.create(
-        username='User1'
-    )
+    user = User.objects.all()[0]
     data = {
         'user': user.id,
         'axis': 'x',
@@ -173,4 +171,22 @@ def test_patch_requests_stations(project_client, resource_setup):
     assert station.create_date == patched_station.create_date, (
         'Проверьте, что при PATCH запросе '
         'не меняется время создания станции'
+    )
+
+
+@pytest.mark.django_db(transaction=True)
+def test_models_str(project_client, resource_setup):
+    """Проверка PATCH запросов на изменение станции"""
+    station = Station.objects.latest('create_date')
+    coordinates = Coordinates.objects.all()[0]
+    command = Command.objects.all()[0]
+    assert station.name == str(station), (
+        'Проверьте, что в модели "Station" правильно описан метод "__str__"'
+    )
+    assert (
+        f'{coordinates.x},{coordinates.y},{coordinates.z}' == str(coordinates)
+    ), 'Проверьте, что в модели "Coordinates" правильно описан метод "__str__"'
+
+    assert f'{command.user} - {command.station.name}' == str(command), (
+        'Проверьте, что в модели "Command" правильно описан метод "__str__"'
     )
