@@ -77,8 +77,8 @@ DATABASES = {
     }
 }
 
-#DATABASES['default'] = DATABASES['dev' if DEBUG else 'prod']
-DATABASES['default'] = DATABASES['prod']
+DATABASES['default'] = DATABASES['dev' if os.getenv('IN_DOCKER', default=False) else 'prod']
+#DATABASES['default'] = DATABASES['prod']
 
 
 # Password validation
