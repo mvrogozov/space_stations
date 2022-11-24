@@ -5,6 +5,9 @@ User = get_user_model()
 
 
 class Station(models.Model):
+    """
+    Модель космической станции.
+    """
     CHOICES = (
         ('OK', 'running'),
         ('BR', 'broken')
@@ -37,6 +40,9 @@ class Station(models.Model):
 
 
 class Coordinates(models.Model):
+    """
+    Модель космической станции. Связана с моделью Station (one-to-one).
+    """
     x = models.IntegerField(default=100)
     y = models.IntegerField(default=100)
     z = models.IntegerField(default=100)
@@ -52,6 +58,10 @@ class Coordinates(models.Model):
 
 
 class Command(models.Model):
+    """
+    Модель команд для станции. Связана с моделью пользователя (one-to-many)
+    и с моделью Station (one-to-many).
+    """
     CHOICES = (
         ('x', 'x'),
         ('y', 'y'),

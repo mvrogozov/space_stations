@@ -12,6 +12,11 @@ from .serializers import (CommandSerializer, CoordinatesSerializer,
 
 
 class StationViewSet(ModelViewSet):
+    """
+    Вьюсет для обработки запросов к API на основе класса
+    Используется стандартная работа класса для модели Station.
+    Добавлен метод ```state``` для обработки запросов на API для команд.
+    """
     model = Station
     serializer_class = StationSerializer
     queryset = Station.objects.all()

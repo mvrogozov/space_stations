@@ -7,6 +7,5 @@ router = SimpleRouter()
 router.register('stations', StationViewSet, basename='stations')
 
 urlpatterns = [
-    #path('stations/<int: station_id>/state/')
     path('', include(router.urls))
 ]
