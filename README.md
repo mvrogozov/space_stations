@@ -87,7 +87,8 @@ GRANT ALL PRIVILEGES ON DATABASE 'DB_NAME' TO 'POSTGRES_USER';
 * DJANGO_SECRET_KEY - ключ для django проекта
 
 Данные переменные необходимо сохранить в файле ```.env```в каталоге с manage.py
-
+***
+Потрачено времени около 13 часов.
 ***
 Автор:
 * Рогозов Михаил
