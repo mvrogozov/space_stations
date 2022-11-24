@@ -1,7 +1,6 @@
 import pytest
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-
 from stations.models import Command, Coordinates, Station
 
 User = get_user_model()

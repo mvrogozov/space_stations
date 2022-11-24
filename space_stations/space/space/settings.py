@@ -77,7 +77,7 @@ DATABASES = {
     }
 }
 
-DATABASES['default'] = DATABASES['dev' if os.getenv('IN_DOCKER', default=False) else 'prod']
+DATABASES['default'] = DATABASES['prod' if os.getenv('IN_DOCKER', default=False) else 'dev']
 #DATABASES['default'] = DATABASES['prod']
 
 

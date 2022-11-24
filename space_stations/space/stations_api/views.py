@@ -1,11 +1,10 @@
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from drf_spectacular.utils import extend_schema
-
 from stations.models import Station
 
 from .serializers import (CommandSerializer, CoordinatesSerializer,
