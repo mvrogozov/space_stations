@@ -85,7 +85,8 @@ GRANT ALL PRIVILEGES ON DATABASE 'DB_NAME' TO 'POSTGRES_USER';
 * POSTGRES_PASSWORD - пароль БД
 * POSTGRES_USER - пользователь БД
 * DJANGO_SECRET_KEY - ключ для django проекта
-Данные переменные необходимо сохранить в файле ```.env```в катклоге с manage.py
+
+Данные переменные необходимо сохранить в файле ```.env```в каталоге с manage.py
 
 ***
 Автор:
